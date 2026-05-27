@@ -1,0 +1,4 @@
+kind: pretrain
+config: configs/pretrain_1-3b.yaml
+output_dir: runs/pretrain_1-3b
+resume_from: null

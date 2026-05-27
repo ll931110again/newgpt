@@ -1,0 +1,48 @@
+run_name: pretrain_gpt2xl_continue
+
+model:
+  # Continue pretraining from a strong baseline model instead of random init.
+  # This is the easiest way to get coherent generations quickly.
+  tokenizer_name_or_path: gpt2
+  config_name_or_path: null
+  init_from: gpt2-xl
+
+data:
+  dataset_manifest: data/manifests/v1.json
+  format: packed_npy
+  # IMPORTANT: gpt2-xl has context length 1024 by default.
+  # Pack your dataset with seq_len=1024 for this run.
+  seq_len: 1024
+
+train:
+  # Increase for better results; this is a reasonable starting point.
+  num_train_steps: 20000
+  learning_rate: 1.0e-4
+  warmup_steps: 200
+  weight_decay: 0.1
+  lr_scheduler_type: cosine
+  grad_clip: 1.0
+
+  per_device_train_batch_size: 1
+  gradient_accumulation_steps: 8
+  bf16: true
+  tf32: true
+  gradient_checkpointing: true
+
+logging:
+  log_every_steps: 10
+  save_every_steps: 1000
+  eval_every_steps: null
+  wandb_project: pretrainer
+  wandb_entity: null
+  # mlop is enabled when MLOP_API_KEY is present and mlop_project is set
+  mlop_project: pretrainer
+
+artifacts:
+  s3_upload: true
+
+distributed:
+  backend: nccl
+  deepspeed:
+    enabled: false
+

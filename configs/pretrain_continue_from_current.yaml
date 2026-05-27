@@ -1,0 +1,52 @@
+run_name: pretrain_continue_from_current
+
+model:
+  tokenizer_name_or_path: gpt2
+  # Continue training from our current checkpoint (downloaded locally).
+  init_from: checkpoints/pretrain_1-3b/final
+  # Keep config null so we reuse the checkpoint's config.json
+  config_name_or_path: null
+
+data:
+  dataset_manifest: data/manifests/v1.json
+  format: packed_npy
+  seq_len: 2048
+
+train:
+  # Continue for longer to get better generations.
+  num_train_steps: 20000
+  learning_rate: 1.0e-4
+  warmup_steps: 200
+  weight_decay: 0.1
+  lr_scheduler_type: cosine
+  grad_clip: 1.0
+
+  # Resume loads ~7GB optimizer on GPU; batch 8 still OOMs without checkpointing on 40GB.
+  per_device_train_batch_size: 4
+  gradient_accumulation_steps: 2
+  bf16: true
+  tf32: true
+  gradient_checkpointing: false
+  attn_implementation: auto
+  optim: adamw_torch_fused
+  dataloader_num_workers: 2
+  dataloader_pin_memory: true
+  dataloader_prefetch_factor: 2
+  torch_compile: false
+
+logging:
+  log_every_steps: 50
+  save_every_steps: 1000
+  eval_every_steps: null
+  wandb_project: pretrainer
+  wandb_entity: null
+  mlop_project: pretrainer
+
+artifacts:
+  s3_upload: true
+
+distributed:
+  backend: nccl
+  deepspeed:
+    enabled: false
+

@@ -1,0 +1,37 @@
+[project]
+name = "pretrainer"
+version = "0.1.0"
+description = "GPU-cloud LLM training pipeline"
+readme = "README.md"
+requires-python = ">=3.11,<3.14"
+dependencies = [
+    "torch",
+    "transformers",
+    "accelerate",
+    "datasets",
+    "tokenizers",
+    "safetensors",
+    "trl",
+    "peft",
+    "pyyaml",
+    "jsonschema",
+    "tqdm",
+    "numpy",
+    "rich",
+    "wandb",
+    "mlop",
+    "boto3",
+    "packaging",
+]
+
+[dependency-groups]
+serve = ["lm-eval", "vllm"]
+train = ["deepspeed"]
+dev = ["pytest"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+
+[tool.uv]
+default-groups = []

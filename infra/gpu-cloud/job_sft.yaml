@@ -1,0 +1,4 @@
+kind: sft
+config: configs/sft_1-3b.yaml
+output_dir: runs/sft_example
+resume_from: null

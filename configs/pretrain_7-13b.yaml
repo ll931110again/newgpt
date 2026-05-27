@@ -1,0 +1,41 @@
+run_name: pretrain_7-13b
+
+model:
+  tokenizer_name_or_path: meta-llama/Llama-2-7b-hf
+  init_from: null
+
+data:
+  dataset_manifest: data/manifests/example.json
+  format: packed_npy
+  seq_len: 4096
+
+train:
+  num_train_steps: 2000
+  learning_rate: 2.0e-4
+  warmup_steps: 100
+  weight_decay: 0.1
+  lr_scheduler_type: cosine
+  grad_clip: 1.0
+
+  per_device_train_batch_size: 1
+  gradient_accumulation_steps: 16
+  bf16: true
+  tf32: true
+  gradient_checkpointing: true
+
+logging:
+  log_every_steps: 10
+  save_every_steps: 250
+  eval_every_steps: 500
+  wandb_project: pretrainer
+
+distributed:
+  backend: nccl
+  deepspeed:
+    enabled: true
+    zero_stage: 3
+    offload_optimizer: false
+    offload_parameters: false
+    gradient_accumulation_steps: 16
+    micro_batch_size_per_gpu: 1
+

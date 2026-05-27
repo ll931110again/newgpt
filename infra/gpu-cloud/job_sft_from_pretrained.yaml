@@ -1,0 +1,5 @@
+kind: sft
+config: configs/sft_from_pretrained.yaml
+output_dir: runs/sft_from_pretrained
+resume_from: null
+

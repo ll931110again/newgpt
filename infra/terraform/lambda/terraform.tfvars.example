@@ -1,0 +1,10 @@
+# Copy to terraform.tfvars (gitignored) and edit.
+# Or pass -var flags / TF_VAR_* environment variables.
+
+region_name        = "us-east-1"
+instance_type_name = "gpu_1x_a100_sxm4"
+ssh_key_names      = ["pretrainer-laptop"]
+instance_name      = "pretrainer-pretrain"
+
+# Optional:
+# file_system_names = ["my-filesystem"]

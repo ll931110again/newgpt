@@ -1,0 +1,20 @@
+# Training-only deps (no vllm/lm-eval) — faster builds, CUDA 12.4 compatible
+transformers
+accelerate
+datasets
+tokenizers
+safetensors
+# deepspeed requires CUDA devel headers; use Dockerfile.deepspeed for ZeRO runs
+trl
+peft
+pyyaml
+jsonschema
+tqdm
+numpy
+rich
+wandb
+mlop
+boto3
+packaging
+# Optional: faster attention on GPU (falls back to PyTorch SDPA if missing)
+# flash-attn

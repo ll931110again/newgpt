@@ -1,0 +1,5 @@
+kind: pretrain
+config: configs/pretrain_continue_from_current.yaml
+output_dir: runs/pretrain_continue_from_current
+resume_from: null
+

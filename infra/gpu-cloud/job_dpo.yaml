@@ -1,0 +1,4 @@
+kind: dpo
+config: configs/dpo_1-3b.yaml
+output_dir: runs/dpo_example
+resume_from: null

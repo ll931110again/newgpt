@@ -1,0 +1,3 @@
+kind: serve
+config: configs/serve_1-3b.yaml
+model_path: null

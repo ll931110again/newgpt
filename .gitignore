@@ -1,0 +1,33 @@
+.DS_Store
+__pycache__/
+*.pyc
+.venv/
+.python-version
+
+# Local env/secrets
+.env
+.env.*
+.lambda_instance_id
+.lambda_instance_ip
+
+# Terraform
+**/.terraform/
+*.tfstate
+*.tfstate.*
+.terraform.lock.hcl
+infra/terraform/lambda/terraform.tfvars
+crash.log
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+
+# Hugging Face / cache
+.cache/
+
+# Artifacts
+runs/
+checkpoints/
+outputs/
+wandb/
+

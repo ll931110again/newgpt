@@ -1,0 +1,27 @@
+# Core training stack
+torch
+transformers
+accelerate
+datasets
+tokenizers
+safetensors
+
+# Distributed / memory scaling
+deepspeed
+
+# Post-training
+trl
+
+# Eval + serving
+lm-eval
+vllm
+
+# Utilities
+pyyaml
+jsonschema
+tqdm
+numpy
+rich
+wandb
+boto3
+packaging

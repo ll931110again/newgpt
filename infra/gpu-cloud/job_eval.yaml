@@ -1,0 +1,4 @@
+kind: eval
+config: configs/eval.yaml
+output_dir: runs/eval_example
+model_path: null

@@ -1,0 +1,13 @@
+.git
+.venv
+__pycache__
+.cache
+runs
+wandb
+outputs
+checkpoints
+data/shards
+data/manifests
+*.npy
+.lambda_instance_id
+infra/gpu-cloud/.env
