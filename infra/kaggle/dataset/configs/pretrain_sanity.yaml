@@ -1,0 +1,35 @@
+run_name: pretrain_sanity
+
+model:
+  tokenizer_name_or_path: gpt2
+  config_name_or_path: gpt2
+  init_from: null
+
+data:
+  dataset_manifest: data/raw/train.jsonl
+  format: json_text
+  seq_len: 128
+
+train:
+  num_train_steps: 20
+  learning_rate: 3.0e-4
+  warmup_steps: 2
+  weight_decay: 0.1
+  lr_scheduler_type: cosine
+  grad_clip: 1.0
+  per_device_train_batch_size: 1
+  gradient_accumulation_steps: 1
+  bf16: true
+  tf32: true
+  gradient_checkpointing: false
+
+logging:
+  log_every_steps: 1
+  save_every_steps: 10
+  eval_every_steps: null
+  wandb_project: null
+
+distributed:
+  backend: nccl
+  deepspeed:
+    enabled: false

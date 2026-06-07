@@ -1,0 +1,10 @@
+serve:
+  host: 0.0.0.0
+  port: 8000
+  tensor_parallel_size: 1
+  dtype: bfloat16
+  max_model_len: 4096
+
+model:
+  model_name_or_path: null
+

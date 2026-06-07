@@ -1,0 +1,9 @@
+transformers>=4.40
+accelerate
+datasets
+tokenizers
+safetensors
+pyyaml
+tqdm
+numpy
+packaging

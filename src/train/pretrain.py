@@ -14,16 +14,31 @@ from transformers import (
     AutoModelForCausalLM,
 )
 
+from src.fleet.env import FleetEnv
 from src.utils.config import deep_get, load_yaml
 from src.utils.reporting import build_report_to, finish_reporting
 from src.data.packed_dataset import PackedTokensIterableDataset
 from src.train.callbacks import build_s3_callback
+from src.train.fleet_callback import build_fleet_callback
 from src.train.performance import (
     apply_cuda_runtime_flags,
     maybe_compile_model,
     model_load_kwargs,
     training_args_performance_kwargs,
 )
+
+
+def _apply_fleet_overrides(cfg: Dict[str, Any]) -> Dict[str, Any]:
+    fleet = FleetEnv.from_os()
+    if not fleet.enabled:
+        return cfg
+    cfg = dict(cfg)
+    model = dict(cfg.get("model") or {})
+    if fleet.canonical_init:
+        model["init_from"] = fleet.canonical_init
+        print(f"[fleet] init_from canonical: {fleet.canonical_init}")
+    cfg["model"] = model
+    return cfg
 
 
 def _build_model(cfg: Dict[str, Any]):
@@ -66,8 +81,15 @@ def _load_pretokenized_dataset(cfg: Dict[str, Any]):
         raise SystemExit("data.dataset_manifest is required")
     fmt = deep_get(cfg, "data", "format", default="packed_npy")
     seq_len = int(deep_get(cfg, "data", "seq_len", default=2048))
+    fleet = FleetEnv.from_os()
     if fmt == "packed_npy":
-        return PackedTokensIterableDataset(manifest, seq_len=seq_len)
+        return PackedTokensIterableDataset(
+            manifest,
+            seq_len=seq_len,
+            shard_ids=fleet.shard_ids if fleet.enabled else None,
+            fleet_rank=fleet.rank if fleet.enabled else None,
+            fleet_world_size=fleet.world_size if fleet.enabled else None,
+        )
     if fmt == "json_text":
         from datasets import load_dataset
         return load_dataset("json", data_files=manifest, split="train")
@@ -82,6 +104,7 @@ def main() -> None:
     args = ap.parse_args()
 
     cfg = load_yaml(args.config)
+    cfg = _apply_fleet_overrides(cfg)
     out = Path(args.output_dir)
     out.mkdir(parents=True, exist_ok=True)
 
@@ -150,6 +173,9 @@ def main() -> None:
     )
 
     callbacks = [build_s3_callback(cfg)]
+    fleet_cb = build_fleet_callback(cfg, out)
+    if fleet_cb is not None:
+        callbacks.append(fleet_cb)
 
     trainer = Trainer(
         model=model,

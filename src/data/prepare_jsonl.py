@@ -28,18 +28,30 @@ def main() -> None:
         default=0,
         help="Cap rows (0 = all). Useful for smoke runs.",
     )
+    ap.add_argument(
+        "--streaming",
+        action="store_true",
+        help="Stream HF dataset (required for large corpora like C4).",
+    )
     args = ap.parse_args()
 
     from datasets import load_dataset
 
+    load_kw: dict = {}
+    if args.streaming:
+        load_kw["streaming"] = True
+
     # Use trust_remote_code for older dataset scripts; clear HF cache if load fails.
     try:
-        ds = load_dataset(args.dataset, args.config, split=args.split)
+        ds = load_dataset(
+            args.dataset, args.config, split=args.split, **load_kw
+        )
     except Exception:
         ds = load_dataset(
             "Salesforce/wikitext",
             "wikitext-103-raw-v1",
             split=args.split,
+            **load_kw,
         )
     out = Path(args.out)
     out.parent.mkdir(parents=True, exist_ok=True)

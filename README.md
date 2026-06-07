@@ -51,14 +51,18 @@ See `docs/40_evaluation.md`.
 ### 8) Monitoring (W&B + S3 checkpoints)
 See `docs/22_monitoring.md`.
 
-### 9) Inference deployment (vLLM)
+### 9) Multi-provider fleet (Kaggle + Paperspace)
+See `docs/24_multi_provider_fleet.md`.
+
+### 10) Inference deployment (vLLM)
 See `docs/50_inference_and_deploy.md`.
 
 ## Directory map
 - `docs/` end-to-end documentation
 - `configs/` scale presets and job configs (YAML)
 - `src/` Python entrypoints and utilities
-- `infra/gpu-cloud/` GPU-cloud VM templates and job specs
+- `infra/gpu-cloud/` GPU-cloud VM templates and job specs (paid providers)
+- `infra/fleet/` Multi-provider parallel fleet config (free GPU providers)
 - `infra/terraform/` Terraform modules (Lambda provisioning)
 - `docker/` container helpers
 

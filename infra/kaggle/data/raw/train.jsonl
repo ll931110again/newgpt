@@ -1,0 +1,4 @@
+{"text": "The quick brown fox jumps over the lazy dog. Language models learn statistical patterns in text."}
+{"text": "Pretraining teaches a model to predict the next token given prior context across large corpora."}
+{"text": "GPU cloud training enables scaling beyond what is feasible on a laptop."}
+{"text": "Sanity checks validate the pipeline before committing to multi-day training runs."}

@@ -31,3 +31,19 @@ checkpoints/
 outputs/
 wandb/
 
+# Fleet runtime state (written by orchestrator)
+infra/fleet/fleet.yaml
+infra/kaggle/dataset/fleet_worker.json
+infra/lightning/fleet_worker.json
+infra/paperspace/fleet_worker.json
+
+# Kaggle bundle staging (regenerate via scripts/prepare_kaggle_*.sh)
+infra/kaggle/src/
+infra/kaggle/dataset/src/
+infra/kaggle/dataset/checkpoints/
+infra/kaggle/.bundle_version
+
+# Large local corpora / token shards
+data/raw/wikitext.jsonl
+data/shards/
+

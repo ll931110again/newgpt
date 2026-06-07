@@ -1,0 +1,32 @@
+# Multi-provider parallel fleet training (free GPU providers: Kaggle + Paperspace).
+# Copy to fleet.yaml and edit providers / train_config.
+
+run_name: pretrain_fleet_v1
+train_config: configs/pretrain_continue_from_current.yaml
+sync_every_steps: 500
+sync_timeout_minutes: 30
+watch_interval_seconds: 120
+store_backend: local
+# store_base_dir: runs/fleet   # optional override
+
+providers:
+  - id: kaggle-0
+    type: kaggle
+    enabled: true
+
+  - id: lightning-1
+    type: lightning
+    enabled: true
+    studio_name: pretrainer-lightning-1
+    machine: T4
+    user: tmux2024
+    teamspace: training-optimization-project
+    workspace_git: https://github.com/ll931110again/newgpt.git
+
+  - id: paperspace-1
+    type: paperspace
+    enabled: false
+    project_id: ""   # e.g. t2y5yctyb8 — must match Paperspace team/API key
+    machine_type: Free-GPU
+    workspace_git: https://github.com/ll931110again/newgpt.git
+    # local: true   # dev-only: run worker on this machine instead of Paperspace

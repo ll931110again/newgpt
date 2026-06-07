@@ -1,0 +1,14 @@
+{
+  "id": "linhvuongnguyen/pretrainer-pretrain",
+  "title": "pretrainer-pretrain",
+  "code_file": "pretrain_kernel.py",
+  "language": "python",
+  "kernel_type": "script",
+  "is_private": true,
+  "enable_gpu": true,
+  "enable_internet": true,
+  "dataset_sources": ["linhvuongnguyen/pretrainer-bundle"],
+  "kernel_sources": [],
+  "competition_sources": [],
+  "model_sources": []
+}

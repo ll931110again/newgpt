@@ -71,11 +71,43 @@ def test_packed_dataset_from_npy_shard(tmp_path: Path):
         assert torch.equal(got["labels"], want["labels"])
 
 
+def test_packed_dataset_fleet_shard_filter(tmp_path: Path):
+    seq_len = 4
+    shards = []
+    for i in range(3):
+        tokens = np.arange((i + 1) * 10, (i + 2) * 10, dtype=np.int32)
+        p = tmp_path / f"s{i}.npy"
+        np.save(p, tokens)
+        shards.append({"path": str(p), "num_tokens": int(tokens.size)})
+    manifest_path = tmp_path / "manifest.json"
+    manifest_path.write_text(
+        json.dumps(
+            {
+                "dataset_version": "vtest",
+                "format": "npy_int32_tokens",
+                "tokenizer": "gpt2",
+                "total_tokens": sum(s["num_tokens"] for s in shards),
+                "shards": shards,
+            }
+        )
+    )
+    ds_all = PackedTokensIterableDataset(str(manifest_path), seq_len=seq_len)
+    ds_fleet = PackedTokensIterableDataset(
+        str(manifest_path), seq_len=seq_len, shard_ids=[0, 2]
+    )
+    assert len(list(ds_all)) > len(list(ds_fleet))
+    ds_rank = PackedTokensIterableDataset(
+        str(manifest_path), seq_len=seq_len, fleet_rank=1, fleet_world_size=2
+    )
+    assert len(list(ds_rank)) < len(list(ds_all))
+
+
 def test_shards_for_worker_partitions_without_overlap():
     from torch.utils.data import get_worker_info
 
     ds = PackedTokensIterableDataset.__new__(PackedTokensIterableDataset)
     ds.manifest = type("M", (), {"shards": [{"path": f"s{i}"} for i in range(6)]})()
+    ds._shard_ids = None
 
     class FakeInfo:
         id = 1

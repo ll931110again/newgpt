@@ -1,0 +1,33 @@
+run_name: dpo_7-13b
+
+base_model:
+  model_name_or_path: null
+  tokenizer_name_or_path: meta-llama/Llama-2-7b-hf
+
+data:
+  train_path: data/dpo/train.jsonl
+  eval_path: data/dpo/eval.jsonl
+  seq_len: 4096
+
+train:
+  num_train_epochs: 1
+  learning_rate: 3.0e-6
+  per_device_train_batch_size: 1
+  gradient_accumulation_steps: 16
+  bf16: true
+  gradient_checkpointing: true
+
+dpo:
+  beta: 0.1
+
+peft:
+  enabled: true
+  lora_r: 32
+  lora_alpha: 64
+  lora_dropout: 0.05
+
+logging:
+  log_every_steps: 10
+  save_every_steps: 200
+  wandb_project: pretrainer
+
